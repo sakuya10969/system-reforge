@@ -207,7 +207,7 @@ class MarkdownExporter:
 
 #### 2. Application層
 
-**GetRequirementsUseCase** (`server/application/get_requirements.py`)
+**GetRequirementsUseCase** (`server/application/requirements/get_requirements.py`)
 
 ```python
 class GetRequirementsUseCase:
@@ -225,7 +225,7 @@ class GetRequirementsUseCase:
         """
 ```
 
-**UpdateRequirementUseCase** (`server/application/update_requirement.py`)
+**UpdateRequirementUseCase** (`server/application/requirements/update_requirement.py`)
 
 ```python
 @dataclass
@@ -253,7 +253,7 @@ class UpdateRequirementUseCase:
         """
 ```
 
-**ExportRequirementsUseCase** (`server/application/export_requirements.py`)
+**ExportRequirementsUseCase** (`server/application/requirements/export_requirements.py`)
 
 ```python
 class ExportRequirementsUseCase:

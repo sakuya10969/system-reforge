@@ -10,7 +10,7 @@ System Reforgeにおける業務ルール抽出機能の設計。解析ジョブ
 - project-management、zip-upload、analysis-job、dependency-visualization仕様が実装済み
 - analysis_jobs、source_files、dependency_edgesテーブルは既存
 - 解析ジョブ完了時に構造化中間データがDBに保存されている
-- LLM APIの具体的なプロバイダは未定（インターフェースで抽象化、スタブ実装を提供）
+- Amazon Bedrock を既定のLLMプロバイダとし、開発時はスタブ実装へフォールバック可能とする
 
 重要な制約:
 - LLMにソースコードを直接渡さない
@@ -177,7 +177,7 @@ class LLMClient(ABC):
 
 #### 2. Application層
 
-**ExtractBusinessRulesUseCase** (`server/application/extract_business_rules.py`)
+**ExtractBusinessRulesUseCase** (`server/application/analysis/extract_business_rules.py`)
 
 ```python
 class ExtractBusinessRulesUseCase:
@@ -198,7 +198,7 @@ class ExtractBusinessRulesUseCase:
         """
 ```
 
-**GetBusinessRulesUseCase** (`server/application/get_business_rules.py`)
+**GetBusinessRulesUseCase** (`server/application/analysis/get_business_rules.py`)
 
 ```python
 class GetBusinessRulesUseCase:
@@ -266,6 +266,10 @@ class StubLLMClient(LLMClient):
                 raw_logic="IF WS-QTY < 1 OR WS-QTY > 9999 PERFORM ERROR-ROUTINE",
             ),
         ]
+
+
+class BedrockLLMClient(LLMClient):
+    """Amazon Bedrock を利用する実装。未設定時はDIでスタブへフォールバックする。"""
 ```
 
 **DefaultMeaningExtractionService** (`server/infrastructure/llm/meaning_extraction_service.py`)

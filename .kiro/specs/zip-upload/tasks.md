@@ -21,7 +21,7 @@
 
 - [x] 2. ZIP展開・言語判定ロジック実装
   - [x] 2.1 ZIP_Extractor実装
-    - `server/application/zip_extractor.py` を作成
+    - `server/application/sources/zip_extractor.py` を作成
     - LANGUAGE_MAP定義、detect_language関数、is_excluded_entry関数、extract_zip関数を実装
     - 隠しファイル（.始まり）、システムファイル（__MACOSX等）、ディレクトリエントリの除外
     - 破損ZIPの場合はInvalidZipFileError、空ZIPの場合はEmptyZipFileErrorを送出
@@ -53,7 +53,7 @@
 
 - [x] 4. Application層実装
   - [x] 4.1 UploadSourceUseCase実装
-    - `server/application/upload_source.py` を作成
+    - `server/application/sources/upload_source.py` を作成
     - プロジェクト存在確認 → ZIP展開 → S3アップロード → DB一括登録 → 結果返却
     - UploadResult、UploadedFileInfoデータクラスを定義
     - _Requirements: 1.1, 1.3, 2.1, 2.2, 3.1_

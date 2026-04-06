@@ -51,20 +51,20 @@
 
 - [x] 3. Application層実装
   - [x] 3.1 CreateProjectUseCase実装
-    - `server/application/create_project.py` を作成
+    - `server/application/projects/create_project.py` を作成
     - UUID生成、s3_prefix自動設定（`projects/{uuid}`）、タイムスタンプ設定
     - 名前のバリデーション（空文字・ホワイトスペースのみ・255文字超を拒否）
     - _Requirements: 1.1, 1.2, 1.3, 1.4_
   - [x] 3.2 ListProjectsUseCase実装
-    - `server/application/list_projects.py` を作成
+    - `server/application/projects/list_projects.py` を作成
     - page/per_pageのデフォルト値設定（page=1, per_page=20）
     - _Requirements: 2.1, 2.2, 2.3_
   - [x] 3.3 GetProjectUseCase実装
-    - `server/application/get_project.py` を作成
+    - `server/application/projects/get_project.py` を作成
     - 存在しない場合はProjectNotFoundErrorを送出
     - _Requirements: 3.1, 3.2_
   - [x] 3.4 DeleteProjectUseCase実装
-    - `server/application/delete_project.py` を作成
+    - `server/application/projects/delete_project.py` を作成
     - 存在しない場合はProjectNotFoundErrorを送出
     - _Requirements: 4.1, 4.2_
   - [ ]* 3.5 ユースケースのプロパティテスト（バリデーション）

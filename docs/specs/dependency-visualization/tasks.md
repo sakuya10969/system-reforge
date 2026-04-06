@@ -40,7 +40,7 @@
 
 - [x] 4. アプリケーション層の実装
   - [x] 4.1 GetDependencyGraphUseCaseを実装する
-    - `server/application/get_dependency_graph.py` を作成
+    - `server/application/analysis/get_dependency_graph.py` を作成
     - GraphNode、GraphEdge、DependencyGraphResultデータクラスを定義
     - ジョブ存在確認、依存関係データ取得、ソースファイル取得、ノード・エッジ形式への変換
     - _Requirements: 1.1, 1.2, 1.4, 1.5_
@@ -49,7 +49,7 @@
     - 任意のソースファイル群とDependencyEdge群を生成し、変換結果のnodes/edgesが入力データと一致することを検証
     - **Validates: Requirements 1.1, 1.4, 1.5**
   - [x] 4.3 GetFlowDataUseCaseを実装する
-    - `server/application/get_flow_data.py` を作成
+    - `server/application/analysis/get_flow_data.py` を作成
     - FlowNode、FlowDataResultデータクラスを定義
     - 依存関係データからツリー構造への変換ロジック（ルートノード特定、再帰的ツリー構築）
     - _Requirements: 2.1, 2.4_
@@ -58,7 +58,7 @@
     - 任意の依存関係エッジ集合を生成し、ツリー構造のルートノードが他から呼ばれていないことを検証
     - **Validates: Requirements 2.1, 2.4**
   - [x] 4.5 GetSourceFilesForJobUseCaseを実装する
-    - `server/application/get_source_files_for_job.py` を作成
+    - `server/application/analysis/get_source_files_for_job.py` を作成
     - ジョブ存在確認、project_idからソースファイル一覧取得
     - _Requirements: 3.1, 3.2_
 

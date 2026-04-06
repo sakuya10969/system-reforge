@@ -86,7 +86,7 @@ class SourceFileRepository(ABC):
 
 #### 2. Application層
 
-**ZIP_Extractor** (`server/application/zip_extractor.py`)
+**ZIP_Extractor** (`server/application/sources/zip_extractor.py`)
 
 ZIPファイルの展開・フィルタリング・言語判定を担当するピュアロジックモジュール。
 
@@ -121,7 +121,7 @@ def extract_zip(zip_data: bytes) -> list[ExtractedFile]:
     """ZIPバイナリを展開し、フィルタリング済みファイルリストを返す。"""
 ```
 
-**UploadSourceUseCase** (`server/application/upload_source.py`)
+**UploadSourceUseCase** (`server/application/sources/upload_source.py`)
 
 ```python
 class UploadSourceUseCase:

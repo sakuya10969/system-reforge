@@ -137,7 +137,7 @@ class NoSourceFilesError(Exception):
 
 #### 2. Application層
 
-**StartAnalysisUseCase** (`server/application/start_analysis.py`)
+**StartAnalysisUseCase** (`server/application/jobs/start_analysis.py`)
 
 ```python
 class StartAnalysisUseCase:
@@ -158,7 +158,7 @@ class StartAnalysisUseCase:
         """
 ```
 
-**GetJobUseCase** (`server/application/get_job.py`)
+**GetJobUseCase** (`server/application/jobs/get_job.py`)
 
 ```python
 class GetJobUseCase:
@@ -168,7 +168,7 @@ class GetJobUseCase:
         """ジョブ取得。存在しない場合はAnalysisJobNotFoundError。"""
 ```
 
-**ListJobsUseCase** (`server/application/list_jobs.py`)
+**ListJobsUseCase** (`server/application/jobs/list_jobs.py`)
 
 ```python
 class ListJobsUseCase:
@@ -182,7 +182,7 @@ class ListJobsUseCase:
         """プロジェクト存在確認後、ジョブ一覧をcreated_at降順で返却。"""
 ```
 
-**RunAnalysisUseCase** (`server/application/run_analysis.py`)
+**RunAnalysisUseCase** (`server/application/jobs/run_analysis.py`)
 
 Job_Workerから呼び出されるユースケース。
 

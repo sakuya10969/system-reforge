@@ -110,7 +110,7 @@ class DependencyEdgeRepository(ABC):
 
 #### 2. Application層
 
-**GetDependencyGraphUseCase** (`server/application/get_dependency_graph.py`)
+**GetDependencyGraphUseCase** (`server/application/analysis/get_dependency_graph.py`)
 
 ```python
 class GetDependencyGraphUseCase:
@@ -130,7 +130,7 @@ class GetDependencyGraphUseCase:
         """
 ```
 
-**DependencyGraphResult** (`server/application/get_dependency_graph.py`)
+**DependencyGraphResult** (`server/application/analysis/get_dependency_graph.py`)
 
 ```python
 @dataclass
@@ -153,7 +153,7 @@ class DependencyGraphResult:
     edges: list[GraphEdge]
 ```
 
-**GetFlowDataUseCase** (`server/application/get_flow_data.py`)
+**GetFlowDataUseCase** (`server/application/analysis/get_flow_data.py`)
 
 ```python
 class GetFlowDataUseCase:
@@ -173,7 +173,7 @@ class GetFlowDataUseCase:
         """
 ```
 
-**FlowDataResult** (`server/application/get_flow_data.py`)
+**FlowDataResult** (`server/application/analysis/get_flow_data.py`)
 
 ```python
 @dataclass
@@ -188,7 +188,7 @@ class FlowDataResult:
     roots: list[FlowNode]
 ```
 
-**GetSourceFilesForJobUseCase** (`server/application/get_source_files_for_job.py`)
+**GetSourceFilesForJobUseCase** (`server/application/analysis/get_source_files_for_job.py`)
 
 ```python
 class GetSourceFilesForJobUseCase:

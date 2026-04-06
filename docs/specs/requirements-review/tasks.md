@@ -46,13 +46,13 @@
 
 - [x] 3. バックエンド: アプリケーション層の実装
   - [x] 3.1 GetRequirementsUseCaseの実装
-    - `server/application/get_requirements.py` にジョブ存在確認 → 要件一覧取得ロジックを実装
+    - `server/application/requirements/get_requirements.py` にジョブ存在確認 → 要件一覧取得ロジックを実装
     - _Requirements: 1.1, 1.2, 1.3_
   - [x] 3.2 UpdateRequirementUseCaseの実装
-    - `server/application/update_requirement.py` に要件存在確認 → フィールド更新 → updated_at設定 → 保存ロジックを実装
+    - `server/application/requirements/update_requirement.py` に要件存在確認 → フィールド更新 → updated_at設定 → 保存ロジックを実装
     - _Requirements: 2.1, 2.2, 2.3, 2.4, 2.5, 2.6_
   - [x] 3.3 ExportRequirementsUseCaseの実装
-    - `server/application/export_requirements.py` にジョブ存在確認 → 要件取得 → Markdown生成ロジックを実装
+    - `server/application/requirements/export_requirements.py` にジョブ存在確認 → 要件取得 → Markdown生成ロジックを実装
     - _Requirements: 3.1, 3.2, 3.3, 3.4_
   - [ ]* 3.4 ユースケースのユニットテスト
     - GetRequirements: 正常系、ジョブ未検出、空リスト

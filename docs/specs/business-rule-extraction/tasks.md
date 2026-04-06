@@ -2,7 +2,7 @@
 
 ## 概要
 
-業務ルール抽出機能の実装。バックエンド（FastAPI + SQLAlchemy + PostgreSQL + httpx）で構造化中間データからLLMを使った業務ルール抽出・API提供を、フロントエンド（React + Mantine + TanStack Table）で業務ルール一覧表示を実装する。LLMクライアントはインターフェースで抽象化し、スタブ実装を提供する。
+業務ルール抽出機能の実装。バックエンド（FastAPI + SQLAlchemy + PostgreSQL + httpx）で構造化中間データからLLMを使った業務ルール抽出・API提供を、フロントエンド（React + Mantine + TanStack Table）で業務ルール一覧表示を実装する。LLMクライアントはインターフェースで抽象化し、Amazon Bedrock 実装とスタブ実装の両方を提供する。
 
 ## タスク
 
@@ -43,6 +43,11 @@
     - `server/infrastructure/llm/llm_client.py` にStubLLMClientを作成
     - 固定の業務ルールデータ（condition, calculation, validation各1件）を返却
     - _Requirements: 2.1, 2.2, 2.3_
+  - [x] 2.4.1 BedrockLLMClientを実装する
+    - `server/infrastructure/llm/llm_client.py` にBedrockLLMClientを作成
+    - `AWS_BEDROCK_MODEL_ID` 設定時に Amazon Bedrock Runtime を利用
+    - 未設定時は依存性注入で StubLLMClient にフォールバック
+    - _Requirements: 2.1, 2.2_
   - [x] 2.5 DefaultMeaningExtractionServiceを実装する
     - `server/infrastructure/llm/meaning_extraction_service.py` を作成
     - 各IntermediateDataに対してLLMClientを呼び出し、結果を集約
@@ -59,7 +64,7 @@
 
 - [x] 4. アプリケーション層の実装
   - [x] 4.1 ExtractBusinessRulesUseCaseを実装する
-    - `server/application/extract_business_rules.py` を作成
+    - `server/application/analysis/extract_business_rules.py` を作成
     - ジョブ存在確認、MeaningExtractionService呼び出し、BusinessRule変換・保存
     - _Requirements: 1.1, 1.3, 1.5_
   - [ ]* 4.2 抽出→保存→取得ラウンドトリップのプロパティテストを実装する
@@ -67,7 +72,7 @@
     - モックリポジトリを使用し、抽出されたルールの数と内容が保存・取得後に一致することを検証
     - **Validates: Requirements 1.1, 1.3, 1.5**
   - [x] 4.3 GetBusinessRulesUseCaseを実装する
-    - `server/application/get_business_rules.py` を作成
+    - `server/application/analysis/get_business_rules.py` を作成
     - ジョブ存在確認、業務ルール一覧取得（rule_typeフィルタ対応、created_at昇順）
     - _Requirements: 3.1, 3.2, 3.3, 3.4_
   - [ ]* 4.4 業務ルール一覧取得のプロパティテストを実装する
@@ -152,5 +157,5 @@
 - 各タスクは特定の要件にトレースされている
 - チェックポイントで段階的に検証を行う
 - プロパティテストはユニバーサルな正当性を検証し、ユニットテストは具体的なエッジケースを検証する
-- LLMクライアントはStubLLMClientで代替し、実際のLLMプロバイダ接続は別途実装する
+- LLMクライアントは Bedrock を既定とし、`AWS_BEDROCK_MODEL_ID` 未設定時は StubLLMClient にフォールバックする
 - 解析ジョブのワーカー（RunAnalysisUseCase）からExtractBusinessRulesUseCaseを呼び出す統合は、analysis-job仕様の更新として別途対応する

@@ -53,7 +53,7 @@
 
 - [x] 4. アプリケーション層の実装
   - [x] 4.1 StartAnalysisUseCaseを実装する
-    - `server/application/start_analysis.py` を作成
+    - `server/application/jobs/start_analysis.py` を作成
     - プロジェクト存在確認、ソースファイル存在確認、ジョブ作成ロジック
     - _Requirements: 1.1, 1.3, 1.4_
   - [ ]* 4.2 StartAnalysisUseCaseのプロパティテストを実装する
@@ -61,15 +61,15 @@
     - ソースファイル0件のプロジェクトに対してジョブ作成がNoSourceFilesErrorを発生させることを検証
     - **Validates: Requirements 1.4**
   - [x] 4.3 ListJobsUseCaseを実装する
-    - `server/application/list_jobs.py` を作成
+    - `server/application/jobs/list_jobs.py` を作成
     - プロジェクト存在確認後、ジョブ一覧をcreated_at降順で返却
     - _Requirements: 2.1, 2.2, 2.3_
   - [x] 4.4 GetJobUseCaseを実装する
-    - `server/application/get_job.py` を作成
+    - `server/application/jobs/get_job.py` を作成
     - ジョブ取得、存在しない場合はAnalysisJobNotFoundError
     - _Requirements: 3.1, 3.2_
   - [x] 4.5 RunAnalysisUseCaseを実装する
-    - `server/application/run_analysis.py` を作成
+    - `server/application/jobs/run_analysis.py` を作成
     - ステータス遷移（pending→running→completed/failed）、タイムスタンプ設定、Analysis_Service呼び出し
     - _Requirements: 4.1, 4.2, 4.3, 4.4_
   - [ ]* 4.6 RunAnalysisUseCaseのユニットテストを実装する

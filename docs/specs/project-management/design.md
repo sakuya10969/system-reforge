@@ -68,22 +68,22 @@ class ProjectRepository(ABC):
 
 #### 2. Application層
 
-**CreateProjectUseCase** (`server/application/create_project.py`)
+**CreateProjectUseCase** (`server/application/projects/create_project.py`)
 - 入力: name, description(任意)
 - 処理: UUID生成、s3_prefix生成（`projects/{uuid}`）、タイムスタンプ設定、リポジトリ経由で保存
 - 出力: 作成されたProjectエンティティ
 
-**ListProjectsUseCase** (`server/application/list_projects.py`)
+**ListProjectsUseCase** (`server/application/projects/list_projects.py`)
 - 入力: page, per_page
 - 処理: リポジトリ経由でページネーション付き一覧取得
 - 出力: (プロジェクトリスト, 総件数)
 
-**GetProjectUseCase** (`server/application/get_project.py`)
+**GetProjectUseCase** (`server/application/projects/get_project.py`)
 - 入力: project_id
 - 処理: リポジトリ経由で取得、存在しない場合は例外
 - 出力: Projectエンティティ
 
-**DeleteProjectUseCase** (`server/application/delete_project.py`)
+**DeleteProjectUseCase** (`server/application/projects/delete_project.py`)
 - 入力: project_id
 - 処理: リポジトリ経由で削除、存在しない場合は例外
 - 出力: なし
