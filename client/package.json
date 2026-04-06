@@ -9,12 +9,27 @@
     "typecheck": "react-router typegen && tsc"
   },
   "dependencies": {
+    "@mantine/core": "^9.0.0",
+    "@mantine/form": "^9.0.0",
+    "@mantine/hooks": "^9.0.0",
+    "@mantine/modals": "^9.0.0",
+    "@mantine/notifications": "^9.0.0",
     "@react-router/node": "7.14.0",
     "@react-router/serve": "7.14.0",
+    "@tanstack/react-query": "^5.96.2",
+    "@tanstack/react-table": "^8.21.3",
+    "@types/dagre": "^0.7.54",
+    "@xyflow/react": "^12.10.2",
+    "axios": "^1.14.0",
+    "dagre": "^0.8.5",
     "isbot": "^5.1.36",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
-    "react-router": "7.14.0"
+    "react-dropzone": "^15.0.0",
+    "react-hook-form": "^7.72.1",
+    "react-markdown": "^10.1.0",
+    "react-router": "7.14.0",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
     "@react-router/dev": "7.14.0",
