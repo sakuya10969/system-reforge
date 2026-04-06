@@ -42,10 +42,6 @@
 | マイグレーション | Alembic |
 | AWS SDK | boto3 |
 
-### 非同期ジョブ
-
-Celery + Redis または Dramatiq
-
 ## データベース
 
 | 項目 | 値 |
@@ -61,5 +57,5 @@ Celery + Redis または Dramatiq
 |------|---------|
 | オブジェクトストレージ | AWS S3 |
 | LLM | Amazon Bedrock |
-| コンテナ実行 | Amazon ECS on Fargate |
-| コンテナ | Docker / Docker Compose |
+| コンテナ実行 | Amazon ECS on Fargate（デプロイ時、必要に応じて） |
+| ローカル開発 | Docker Compose（DB・LocalStackのみ） |

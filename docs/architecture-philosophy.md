@@ -56,7 +56,6 @@ api → application → domain ← infrastructure
 | application | ユースケース。ビジネスフローの調整 | domain |
 | domain | エンティティ・ビジネスルール。フレームワーク非依存 | なし |
 | infrastructure | DB・S3・LLMなど外部連携の実装 | domain（インターフェース実装） |
-| worker | 非同期ジョブの実行 | application, infrastructure |
 
 ### ルール
 
@@ -68,7 +67,7 @@ api → application → domain ← infrastructure
 
 ### 非同期処理の原則
 
-- 解析処理はAPIで同期実行しない。必ず非同期ジョブ（Celery or Dramatiq）で実行
+- 解析処理はAPIで同期実行しない。バックグラウンドタスク（FastAPIのBackgroundTasksなど）で実行
 - APIはジョブを作成して即座にレスポンスを返す
 - フロントエンドはポーリングまたはWebSocketでジョブ状態を監視
 
