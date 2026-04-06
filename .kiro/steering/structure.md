@@ -97,14 +97,8 @@ server/
 │   │   └── llm_client.py  # LLM API呼び出し（意味抽出専用）
 │   └── migrations/        # Alembicマイグレーション
 │
-└── worker/                # 非同期ジョブ（Celery or Dramatiq）
-    ├── celery_app.py      # Celery設定
-    ├── tasks/
-    │   ├── parse_source.py    # ソースコード解析タスク
-    │   ├── build_structure.py # 構造化データ生成タスク
-    │   └── extract_meaning.py # LLM意味抽出タスク
-    └── parsers/           # 言語別パーサー
-        └── cobol_parser.py
+└── parsers/               # 言語別パーサー
+    └── cobol_parser.py
 ```
 
 ### クリーンアーキテクチャルール
