@@ -1,1 +1,1 @@
-export { AnalysisPage } from "./ui";
+export { default as AnalysisPage } from "./ui";

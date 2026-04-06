@@ -6,7 +6,11 @@ import { Link } from "react-router";
 import { useDeleteProject, useProjects } from "~/entities/project";
 import { CreateProjectForm } from "~/features/create-project";
 
-export function ProjectsPage() {
+export async function loader() {
+  return null;
+}
+
+export default function ProjectsPage() {
   const { data, isLoading, isError } = useProjects();
   const { mutateAsync: deleteProject } = useDeleteProject();
   const [opened, { open, close }] = useDisclosure(false);

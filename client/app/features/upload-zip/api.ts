@@ -1,5 +1,6 @@
 import axios from "axios";
 import type { UploadResult } from "~/entities/source-file";
+import { API_BASE_URL } from "~/shared/api/config";
 
 export const uploadZip = async (
   projectId: string,
@@ -9,7 +10,7 @@ export const uploadZip = async (
   const form = new FormData();
   form.append("file", file);
   const res = await axios.post<{ data: UploadResult }>(
-    `/api/v1/projects/${projectId}/upload`,
+    `${API_BASE_URL}/projects/${projectId}/upload`,
     form,
     {
       headers: { "Content-Type": "multipart/form-data" },

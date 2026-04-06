@@ -1,1 +1,1 @@
-export { UploadPage } from "./ui";
+export { default as UploadPage } from "./ui";

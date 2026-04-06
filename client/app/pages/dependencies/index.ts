@@ -1,1 +1,1 @@
-export { DependenciesPage } from "./ui";
+export { default as DependenciesPage } from "./ui";

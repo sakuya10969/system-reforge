@@ -2,7 +2,11 @@ import { Button, Container, Group, Title } from "@mantine/core";
 import { Link, useParams } from "react-router";
 import { UploadDropzone } from "~/features/upload-zip";
 
-export function UploadPage() {
+export async function loader() {
+  return null;
+}
+
+export default function UploadPage() {
   const { projectId } = useParams<{ projectId: string }>();
 
   return (

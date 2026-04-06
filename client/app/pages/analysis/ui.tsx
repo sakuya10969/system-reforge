@@ -9,7 +9,11 @@ import { JobListWidget } from "~/widgets/job-list";
 import { RuleTable } from "~/widgets/rule-table";
 import { RequirementsSection } from "./ui/RequirementsSection";
 
-export function AnalysisPage() {
+export async function loader() {
+  return null;
+}
+
+export default function AnalysisPage() {
   const { projectId } = useParams<{ projectId: string }>();
   const { data: jobs, isLoading: jobsLoading, isError: jobsError } = useJobs(projectId ?? "");
 

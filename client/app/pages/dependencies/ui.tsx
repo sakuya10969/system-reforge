@@ -3,7 +3,11 @@ import { Link, useParams } from "react-router";
 import { useDependencyGraph } from "~/entities/dependency";
 import { FlowGraph } from "~/widgets/flow-graph";
 
-export function DependenciesPage() {
+export async function loader() {
+  return null;
+}
+
+export default function DependenciesPage() {
   const { jobId } = useParams<{ jobId: string }>();
   const { data, isLoading, isError } = useDependencyGraph(jobId ?? "");
 
