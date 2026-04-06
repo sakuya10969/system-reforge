@@ -9,16 +9,16 @@ from server.api.dependencies import (
     get_source_file_repository,
 )
 from server.api.schemas.upload import UploadResultData, UploadResultResponse, UploadedFileResponse
-from server.application.upload_source import UploadSourceUseCase
+from server.application.sources import UploadSourceUseCase
 from server.domain.repositories.project_repository import ProjectRepository
 from server.domain.repositories.source_file_repository import SourceFileRepository
-from server.infrastructure.storage.s3_client import S3Client
+from server.domain.services.storage_client import StorageClient
 
 router = APIRouter(prefix="/api/v1/projects", tags=["upload"])
 
 ProjectRepoDep = Annotated[ProjectRepository, Depends(get_project_repository)]
 SourceRepoDep = Annotated[SourceFileRepository, Depends(get_source_file_repository)]
-S3Dep = Annotated[S3Client, Depends(get_s3_client)]
+S3Dep = Annotated[StorageClient, Depends(get_s3_client)]
 
 
 @router.post("/{project_id}/upload")

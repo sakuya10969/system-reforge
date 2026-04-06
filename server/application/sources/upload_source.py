@@ -2,12 +2,12 @@ from dataclasses import dataclass
 from datetime import datetime, timezone
 from uuid import UUID, uuid4
 
-from server.application.zip_extractor import extract_zip
+from server.application.sources.zip_extractor import extract_zip
 from server.domain.exceptions import ProjectNotFoundError
 from server.domain.models.source_file import SourceFile
 from server.domain.repositories.project_repository import ProjectRepository
 from server.domain.repositories.source_file_repository import SourceFileRepository
-from server.infrastructure.storage.s3_client import S3Client
+from server.domain.services.storage_client import StorageClient
 
 
 @dataclass
@@ -29,11 +29,11 @@ class UploadSourceUseCase:
         self,
         project_repository: ProjectRepository,
         source_file_repository: SourceFileRepository,
-        s3_client: S3Client,
+        storage_client: StorageClient,
     ) -> None:
         self._project_repository = project_repository
         self._source_file_repository = source_file_repository
-        self._s3_client = s3_client
+        self._storage_client = storage_client
 
     async def execute(self, project_id: UUID, zip_data: bytes) -> UploadResult:
         project = await self._project_repository.find_by_id(project_id)
@@ -45,8 +45,8 @@ class UploadSourceUseCase:
         source_files: list[SourceFile] = []
 
         for ef in extracted:
-            s3_key = self._s3_client.generate_s3_key(project.s3_prefix, ef.file_path)
-            self._s3_client.upload_file(s3_key, ef.content)
+            s3_key = self._storage_client.generate_source_key(project.s3_prefix, ef.file_path)
+            self._storage_client.upload_file(s3_key, ef.content)
             source_files.append(SourceFile(
                 id=uuid4(),
                 project_id=project_id,

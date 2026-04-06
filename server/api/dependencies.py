@@ -4,6 +4,7 @@ from typing import Annotated
 from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from server.config.settings import Settings, get_settings
 from server.domain.repositories.analysis_job_repository import AnalysisJobRepository
 from server.domain.repositories.business_rule_repository import BusinessRuleRepository
 from server.domain.repositories.dependency_edge_repository import DependencyEdgeRepository
@@ -13,6 +14,7 @@ from server.domain.repositories.source_file_repository import SourceFileReposito
 from server.domain.services.analysis_service import AnalysisService
 from server.domain.services.llm_client import LLMClient
 from server.domain.services.meaning_extraction_service import MeaningExtractionService
+from server.domain.services.storage_client import StorageClient
 from server.infrastructure.analysis.stub_analysis_service import StubAnalysisService
 from server.infrastructure.database.connection import get_session
 from server.infrastructure.database.repositories.analysis_job_repository import SQLAlchemyAnalysisJobRepository
@@ -21,7 +23,7 @@ from server.infrastructure.database.repositories.dependency_edge_repository impo
 from server.infrastructure.database.repositories.project_repository import SQLAlchemyProjectRepository
 from server.infrastructure.database.repositories.requirement_repository import SQLAlchemyRequirementRepository
 from server.infrastructure.database.repositories.source_file_repository import SQLAlchemySourceFileRepository
-from server.infrastructure.llm.llm_client import StubLLMClient
+from server.infrastructure.llm.llm_client import BedrockLLMClient, StubLLMClient
 from server.infrastructure.llm.meaning_extraction_service import DefaultMeaningExtractionService
 from server.infrastructure.storage.s3_client import S3Client
 
@@ -56,7 +58,14 @@ def get_analysis_service() -> AnalysisService:
     return StubAnalysisService()
 
 
+def get_app_settings() -> Settings:
+    return get_settings()
+
+
 def get_llm_client() -> LLMClient:
+    settings = get_settings()
+    if settings.use_bedrock:
+        return BedrockLLMClient(settings)
     return StubLLMClient()
 
 
@@ -66,5 +75,5 @@ def get_meaning_extraction_service(
     return DefaultMeaningExtractionService(llm_client)
 
 
-def get_s3_client() -> S3Client:
-    return S3Client()
+def get_s3_client() -> StorageClient:
+    return S3Client(get_settings())

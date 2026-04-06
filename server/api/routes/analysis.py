@@ -28,14 +28,19 @@ from server.api.schemas.business_rule import (
     SourceLocationSchema,
 )
 from server.api.schemas.requirement import ExportData, ExportResponse, RequirementListResponse, RequirementResponse, RequirementUpdateRequest
-from server.application.export_requirements import ExportRequirementsUseCase
-from server.application.extract_business_rules import ExtractBusinessRulesUseCase
-from server.application.get_business_rules import GetBusinessRulesUseCase
-from server.application.get_dependency_graph import GetDependencyGraphUseCase
-from server.application.get_flow_data import GetFlowDataUseCase, FlowNode
-from server.application.get_requirements import GetRequirementsUseCase
-from server.application.get_source_files_for_job import GetSourceFilesForJobUseCase
-from server.application.update_requirement import UpdateRequirementUseCase
+from server.application.analysis import (
+    ExtractBusinessRulesUseCase,
+    FlowNode,
+    GetBusinessRulesUseCase,
+    GetDependencyGraphUseCase,
+    GetFlowDataUseCase,
+    GetSourceFilesForJobUseCase,
+)
+from server.application.requirements import (
+    ExportRequirementsUseCase,
+    GetRequirementsUseCase,
+    UpdateRequirementUseCase,
+)
 from server.domain.models.business_rule import RuleType
 from server.domain.repositories.analysis_job_repository import AnalysisJobRepository
 from server.domain.repositories.business_rule_repository import BusinessRuleRepository

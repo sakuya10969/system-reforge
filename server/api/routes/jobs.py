@@ -10,10 +10,12 @@ from server.api.dependencies import (
     get_source_file_repository,
 )
 from server.api.schemas.job import JobCreateResponse, JobListResponse, JobResponse
-from server.application.get_job import GetJobUseCase
-from server.application.list_jobs import ListJobsUseCase
-from server.application.run_analysis import RunAnalysisUseCase
-from server.application.start_analysis import StartAnalysisUseCase
+from server.application.jobs import (
+    GetJobUseCase,
+    ListJobsUseCase,
+    RunAnalysisUseCase,
+    StartAnalysisUseCase,
+)
 from server.domain.repositories.analysis_job_repository import AnalysisJobRepository
 from server.domain.repositories.project_repository import ProjectRepository
 from server.domain.repositories.source_file_repository import SourceFileRepository

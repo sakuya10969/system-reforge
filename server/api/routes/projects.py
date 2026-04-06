@@ -10,10 +10,12 @@ from server.api.schemas.project import (
     ProjectListResponse,
     ProjectResponse,
 )
-from server.application.create_project import CreateProjectUseCase
-from server.application.delete_project import DeleteProjectUseCase
-from server.application.get_project import GetProjectUseCase
-from server.application.list_projects import ListProjectsUseCase
+from server.application.projects import (
+    CreateProjectUseCase,
+    DeleteProjectUseCase,
+    GetProjectUseCase,
+    ListProjectsUseCase,
+)
 from server.domain.repositories.project_repository import ProjectRepository
 
 router = APIRouter(prefix="/api/v1/projects", tags=["projects"])
