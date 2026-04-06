@@ -69,7 +69,7 @@ graph TD
 
 #### 1. Domain層
 
-**AnalysisJob エンティティ** (`server/domain/models/analysis_job.py`)
+**AnalysisJob エンティティ** (`server/app/domain/models/analysis_job.py`)
 
 ```python
 from dataclasses import dataclass
@@ -112,7 +112,7 @@ class AnalysisJob:
         self.status = new_status
 ```
 
-**AnalysisJobRepository インターフェース** (`server/domain/repositories/analysis_job_repository.py`)
+**AnalysisJobRepository インターフェース** (`server/app/domain/repositories/analysis_job_repository.py`)
 
 ```python
 class AnalysisJobRepository(ABC):
@@ -122,7 +122,7 @@ class AnalysisJobRepository(ABC):
     async def update(self, job: AnalysisJob) -> None
 ```
 
-**例外クラス** (`server/domain/exceptions.py` に追加)
+**例外クラス** (`server/app/domain/exceptions.py` に追加)
 
 ```python
 class AnalysisJobNotFoundError(Exception):
@@ -137,7 +137,7 @@ class NoSourceFilesError(Exception):
 
 #### 2. Application層
 
-**StartAnalysisUseCase** (`server/application/jobs/start_analysis.py`)
+**StartAnalysisUseCase** (`server/app/application/jobs/start_analysis.py`)
 
 ```python
 class StartAnalysisUseCase:
@@ -158,7 +158,7 @@ class StartAnalysisUseCase:
         """
 ```
 
-**GetJobUseCase** (`server/application/jobs/get_job.py`)
+**GetJobUseCase** (`server/app/application/jobs/get_job.py`)
 
 ```python
 class GetJobUseCase:
@@ -168,7 +168,7 @@ class GetJobUseCase:
         """ジョブ取得。存在しない場合はAnalysisJobNotFoundError。"""
 ```
 
-**ListJobsUseCase** (`server/application/jobs/list_jobs.py`)
+**ListJobsUseCase** (`server/app/application/jobs/list_jobs.py`)
 
 ```python
 class ListJobsUseCase:
@@ -182,7 +182,7 @@ class ListJobsUseCase:
         """プロジェクト存在確認後、ジョブ一覧をcreated_at降順で返却。"""
 ```
 
-**RunAnalysisUseCase** (`server/application/jobs/run_analysis.py`)
+**RunAnalysisUseCase** (`server/app/application/jobs/run_analysis.py`)
 
 Job_Workerから呼び出されるユースケース。
 
@@ -205,7 +205,7 @@ class RunAnalysisUseCase:
         """
 ```
 
-**AnalysisService** (`server/domain/services/analysis_service.py`)
+**AnalysisService** (`server/app/domain/services/analysis_service.py`)
 
 ```python
 class AnalysisService(ABC):
@@ -213,7 +213,7 @@ class AnalysisService(ABC):
         """ソースファイルを解析し、構造化中間データを生成する。スタブ実装。"""
 ```
 
-**StubAnalysisService** (`server/infrastructure/analysis/stub_analysis_service.py`)
+**StubAnalysisService** (`server/app/infrastructure/analysis/stub_analysis_service.py`)
 
 ```python
 class StubAnalysisService(AnalysisService):
@@ -224,7 +224,7 @@ class StubAnalysisService(AnalysisService):
 
 #### 3. Infrastructure層
 
-**SQLAlchemy テーブルモデル** (`server/infrastructure/database/models.py` に追加)
+**SQLAlchemy テーブルモデル** (`server/app/infrastructure/database/models.py` に追加)
 
 ```python
 class AnalysisJobModel(Base):
@@ -238,7 +238,7 @@ class AnalysisJobModel(Base):
     created_at = Column(DateTime, nullable=False, server_default=func.now())
 ```
 
-**SQLAlchemyAnalysisJobRepository** (`server/infrastructure/database/repositories/analysis_job_repository.py`)
+**SQLAlchemyAnalysisJobRepository** (`server/app/infrastructure/database/repositories/analysis_job_repository.py`)
 
 - AnalysisJobRepositoryインターフェースの実装
 - find_by_projectはcreated_at降順でソート
@@ -246,7 +246,7 @@ class AnalysisJobModel(Base):
 
 #### 4. API層
 
-**ジョブルーター** (`server/api/routes/jobs.py`)
+**ジョブルーター** (`server/app/api/routes/jobs.py`)
 
 | エンドポイント | メソッド | 説明 |
 |---------------|---------|------|
@@ -254,7 +254,7 @@ class AnalysisJobModel(Base):
 | `/api/v1/projects/{project_id}/jobs` | GET | ジョブ一覧取得 |
 | `/api/v1/jobs/{job_id}` | GET | ジョブ詳細・ステータス取得 |
 
-**Pydanticスキーマ** (`server/api/schemas/job.py`)
+**Pydanticスキーマ** (`server/app/api/schemas/job.py`)
 
 ```python
 class JobResponse(BaseModel):
@@ -273,7 +273,7 @@ class JobCreateResponse(BaseModel):
     data: JobResponse
 ```
 
-**Job_Worker** (`server/api/routes/jobs.py` 内)
+**Job_Worker** (`server/app/api/routes/jobs.py` 内)
 
 ```python
 async def run_analysis_worker(job_id: UUID, ...):
@@ -488,7 +488,7 @@ CREATE INDEX idx_analysis_jobs_status ON analysis_jobs(status);
 | DB接続エラー | 500 | INTERNAL_ERROR | エラーログ出力、汎用エラーメッセージを返却 |
 | ワーカー実行エラー | — | — | ジョブのstatusをfailedに更新、error_messageにエラー内容を記録 |
 
-**例外クラス** (`server/domain/exceptions.py` に追加)
+**例外クラス** (`server/app/domain/exceptions.py` に追加)
 
 ```python
 class AnalysisJobNotFoundError(Exception):
@@ -501,7 +501,7 @@ class NoSourceFilesError(Exception):
     pass
 ```
 
-**例外ハンドラ** (`server/api/error_handlers.py` に追加)
+**例外ハンドラ** (`server/app/api/error_handlers.py` に追加)
 - AnalysisJobNotFoundError → 404レスポンス
 - NoSourceFilesError → 422レスポンス
 - InvalidStatusTransitionError → 409レスポンス

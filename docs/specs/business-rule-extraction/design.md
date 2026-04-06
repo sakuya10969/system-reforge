@@ -85,7 +85,7 @@ graph TD
 
 #### 1. Domain層
 
-**RuleType 列挙型** (`server/domain/models/business_rule.py`)
+**RuleType 列挙型** (`server/app/domain/models/business_rule.py`)
 
 ```python
 from enum import Enum
@@ -96,7 +96,7 @@ class RuleType(str, Enum):
     VALIDATION = "validation"
 ```
 
-**BusinessRule エンティティ** (`server/domain/models/business_rule.py`)
+**BusinessRule エンティティ** (`server/app/domain/models/business_rule.py`)
 
 ```python
 from dataclasses import dataclass
@@ -119,7 +119,7 @@ class BusinessRule:
             raise ValueError("description must not be empty")
 ```
 
-**BusinessRuleRepository インターフェース** (`server/domain/repositories/business_rule_repository.py`)
+**BusinessRuleRepository インターフェース** (`server/app/domain/repositories/business_rule_repository.py`)
 
 ```python
 from abc import ABC, abstractmethod
@@ -135,7 +135,7 @@ class BusinessRuleRepository(ABC):
         """指定ジョブの業務ルールを取得する。rule_type指定時はフィルタリング。created_at昇順。"""
 ```
 
-**MeaningExtractionService インターフェース** (`server/domain/services/meaning_extraction_service.py`)
+**MeaningExtractionService インターフェース** (`server/app/domain/services/meaning_extraction_service.py`)
 
 ```python
 from abc import ABC, abstractmethod
@@ -164,7 +164,7 @@ class MeaningExtractionService(ABC):
         """構造化中間データから業務ルールを抽出する。"""
 ```
 
-**LLMClient インターフェース** (`server/domain/services/llm_client.py`)
+**LLMClient インターフェース** (`server/app/domain/services/llm_client.py`)
 
 ```python
 from abc import ABC, abstractmethod
@@ -177,7 +177,7 @@ class LLMClient(ABC):
 
 #### 2. Application層
 
-**ExtractBusinessRulesUseCase** (`server/application/analysis/extract_business_rules.py`)
+**ExtractBusinessRulesUseCase** (`server/app/application/analysis/extract_business_rules.py`)
 
 ```python
 class ExtractBusinessRulesUseCase:
@@ -198,7 +198,7 @@ class ExtractBusinessRulesUseCase:
         """
 ```
 
-**GetBusinessRulesUseCase** (`server/application/analysis/get_business_rules.py`)
+**GetBusinessRulesUseCase** (`server/app/application/analysis/get_business_rules.py`)
 
 ```python
 class GetBusinessRulesUseCase:
@@ -218,7 +218,7 @@ class GetBusinessRulesUseCase:
 
 #### 3. Infrastructure層
 
-**SQLAlchemy テーブルモデル** (`server/infrastructure/database/models.py` に追加)
+**SQLAlchemy テーブルモデル** (`server/app/infrastructure/database/models.py` に追加)
 
 ```python
 class BusinessRuleModel(Base):
@@ -233,13 +233,13 @@ class BusinessRuleModel(Base):
     created_at = Column(DateTime, nullable=False, server_default=func.now())
 ```
 
-**SQLAlchemyBusinessRuleRepository** (`server/infrastructure/database/repositories/business_rule_repository.py`)
+**SQLAlchemyBusinessRuleRepository** (`server/app/infrastructure/database/repositories/business_rule_repository.py`)
 
 - BusinessRuleRepositoryインターフェースの実装
 - find_by_jobはcreated_at昇順でソート、rule_typeフィルタ対応
 - BusinessRuleModel ↔ BusinessRule のマッピング
 
-**LLMクライアント実装** (`server/infrastructure/llm/llm_client.py`)
+**LLMクライアント実装** (`server/app/infrastructure/llm/llm_client.py`)
 
 ```python
 class StubLLMClient(LLMClient):
@@ -272,7 +272,7 @@ class BedrockLLMClient(LLMClient):
     """Amazon Bedrock を利用する実装。未設定時はDIでスタブへフォールバックする。"""
 ```
 
-**DefaultMeaningExtractionService** (`server/infrastructure/llm/meaning_extraction_service.py`)
+**DefaultMeaningExtractionService** (`server/app/infrastructure/llm/meaning_extraction_service.py`)
 
 ```python
 class DefaultMeaningExtractionService(MeaningExtractionService):
@@ -296,13 +296,13 @@ class DefaultMeaningExtractionService(MeaningExtractionService):
 
 #### 4. API層
 
-**業務ルールルーター** (`server/api/routes/analysis.py` に追加)
+**業務ルールルーター** (`server/app/api/routes/analysis.py` に追加)
 
 | エンドポイント | メソッド | 説明 |
 |---------------|---------|------|
 | `/api/v1/jobs/{job_id}/business-rules` | GET | 業務ルール一覧取得（rule_typeフィルタ対応） |
 
-**Pydanticスキーマ** (`server/api/schemas/business_rule.py`)
+**Pydanticスキーマ** (`server/app/api/schemas/business_rule.py`)
 
 ```python
 class SourceLocationSchema(BaseModel):
@@ -579,7 +579,7 @@ CREATE INDEX idx_business_rules_source_file_id ON business_rules(source_file_id)
 | LLM通信エラー | — | — | ログ出力、抽出済みルールは保持、処理継続 |
 | DB接続エラー | 500 | INTERNAL_ERROR | エラーログ出力、汎用エラーメッセージを返却 |
 
-既存の例外クラス（`server/domain/exceptions.py`）を再利用:
+既存の例外クラス（`server/app/domain/exceptions.py`）を再利用:
 - `AnalysisJobNotFoundError` → 404レスポンス（analysis-job仕様で定義済み）
 
 ### フロントエンド

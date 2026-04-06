@@ -111,7 +111,7 @@ graph TD
 
 #### 1. Domain層
 
-**RequirementStatus 列挙型** (`server/domain/models/requirement.py`)
+**RequirementStatus 列挙型** (`server/app/domain/models/requirement.py`)
 
 ```python
 from enum import Enum
@@ -127,7 +127,7 @@ class RequirementPriority(str, Enum):
     LOW = "low"
 ```
 
-**Requirement エンティティ** (`server/domain/models/requirement.py`)
+**Requirement エンティティ** (`server/app/domain/models/requirement.py`)
 
 ```python
 from dataclasses import dataclass, field
@@ -158,7 +158,7 @@ class Requirement:
             raise ValueError(f"invalid priority: {self.priority}")
 ```
 
-**RequirementRepository インターフェース** (`server/domain/repositories/requirement_repository.py`)
+**RequirementRepository インターフェース** (`server/app/domain/repositories/requirement_repository.py`)
 
 ```python
 from abc import ABC, abstractmethod
@@ -178,7 +178,7 @@ class RequirementRepository(ABC):
         """要件を更新する。"""
 ```
 
-**MarkdownExporter ドメインサービス** (`server/domain/services/markdown_exporter.py`)
+**MarkdownExporter ドメインサービス** (`server/app/domain/services/markdown_exporter.py`)
 
 ```python
 class MarkdownExporter:
@@ -207,7 +207,7 @@ class MarkdownExporter:
 
 #### 2. Application層
 
-**GetRequirementsUseCase** (`server/application/requirements/get_requirements.py`)
+**GetRequirementsUseCase** (`server/app/application/requirements/get_requirements.py`)
 
 ```python
 class GetRequirementsUseCase:
@@ -225,7 +225,7 @@ class GetRequirementsUseCase:
         """
 ```
 
-**UpdateRequirementUseCase** (`server/application/requirements/update_requirement.py`)
+**UpdateRequirementUseCase** (`server/app/application/requirements/update_requirement.py`)
 
 ```python
 @dataclass
@@ -253,7 +253,7 @@ class UpdateRequirementUseCase:
         """
 ```
 
-**ExportRequirementsUseCase** (`server/application/requirements/export_requirements.py`)
+**ExportRequirementsUseCase** (`server/app/application/requirements/export_requirements.py`)
 
 ```python
 class ExportRequirementsUseCase:
@@ -275,7 +275,7 @@ class ExportRequirementsUseCase:
 
 #### 3. Infrastructure層
 
-**SQLAlchemy テーブルモデル** (`server/infrastructure/database/models.py` に追加)
+**SQLAlchemy テーブルモデル** (`server/app/infrastructure/database/models.py` に追加)
 
 ```python
 class RequirementModel(Base):
@@ -292,7 +292,7 @@ class RequirementModel(Base):
     updated_at = Column(DateTime, nullable=False, server_default=func.now(), onupdate=func.now())
 ```
 
-**SQLAlchemyRequirementRepository** (`server/infrastructure/database/repositories/requirement_repository.py`)
+**SQLAlchemyRequirementRepository** (`server/app/infrastructure/database/repositories/requirement_repository.py`)
 
 - RequirementRepositoryインターフェースの実装
 - find_by_jobはcreated_at昇順でソート
@@ -301,7 +301,7 @@ class RequirementModel(Base):
 
 #### 4. API層
 
-**要件ルーター** (`server/api/routes/requirements.py`)
+**要件ルーター** (`server/app/api/routes/requirements.py`)
 
 | エンドポイント | メソッド | 説明 |
 |---------------|---------|------|
@@ -309,7 +309,7 @@ class RequirementModel(Base):
 | `/api/v1/requirements/{requirement_id}` | PUT | 要件編集 |
 | `/api/v1/jobs/{job_id}/requirements/export` | POST | 要件エクスポート |
 
-**Pydanticスキーマ** (`server/api/schemas/requirement.py`)
+**Pydanticスキーマ** (`server/app/api/schemas/requirement.py`)
 
 ```python
 class RequirementResponse(BaseModel):

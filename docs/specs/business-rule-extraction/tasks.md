@@ -8,7 +8,7 @@
 
 - [x] 1. ドメイン層の実装
   - [x] 1.1 BusinessRuleエンティティとRuleType列挙型を実装する
-    - `server/domain/models/business_rule.py` を作成
+    - `server/app/domain/models/business_rule.py` を作成
     - RuleType列挙型（condition, calculation, validation）を定義
     - BusinessRuleデータクラスを実装（descriptionの空文字バリデーション付き）
     - _Requirements: 4.1, 4.2, 4.3, 4.4_
@@ -18,38 +18,38 @@
     - 空文字列・ホワイトスペースのみのdescriptionでValueErrorが発生することを検証
     - **Validates: Requirements 4.2, 4.3**
   - [x] 1.3 BusinessRuleRepositoryインターフェースを実装する
-    - `server/domain/repositories/business_rule_repository.py` を作成
+    - `server/app/domain/repositories/business_rule_repository.py` を作成
     - create_many, find_by_jobメソッドを定義（find_by_jobはrule_typeフィルタ対応）
     - _Requirements: 1.5, 3.1, 3.4_
   - [x] 1.4 MeaningExtractionServiceインターフェースとLLMClientインターフェースを実装する
-    - `server/domain/services/meaning_extraction_service.py` を作成（IntermediateData, ExtractedRule, MeaningExtractionService）
-    - `server/domain/services/llm_client.py` を作成（LLMClient抽象クラス）
+    - `server/app/domain/services/meaning_extraction_service.py` を作成（IntermediateData, ExtractedRule, MeaningExtractionService）
+    - `server/app/domain/services/llm_client.py` を作成（LLMClient抽象クラス）
     - _Requirements: 1.1, 1.2, 2.1, 2.2_
 
 - [x] 2. インフラストラクチャ層の実装
   - [x] 2.1 BusinessRuleModelを追加する
-    - `server/infrastructure/database/models.py` にBusinessRuleModelを追加
+    - `server/app/infrastructure/database/models.py` にBusinessRuleModelを追加
     - job_idとsource_file_idにインデックスを設定
     - _Requirements: 4.1, 4.4_
   - [x] 2.2 Alembicマイグレーションを作成する
     - business_rulesテーブルの作成マイグレーションを生成
     - _Requirements: 4.1_
   - [x] 2.3 SQLAlchemyBusinessRuleRepositoryを実装する
-    - `server/infrastructure/database/repositories/business_rule_repository.py` を作成
+    - `server/app/infrastructure/database/repositories/business_rule_repository.py` を作成
     - BusinessRuleModel ↔ BusinessRule のマッピング
     - find_by_jobはcreated_at昇順ソート、rule_typeフィルタ対応
     - _Requirements: 1.5, 3.1, 3.4_
   - [x] 2.4 StubLLMClientを実装する
-    - `server/infrastructure/llm/llm_client.py` にStubLLMClientを作成
+    - `server/app/infrastructure/llm/llm_client.py` にStubLLMClientを作成
     - 固定の業務ルールデータ（condition, calculation, validation各1件）を返却
     - _Requirements: 2.1, 2.2, 2.3_
   - [x] 2.4.1 BedrockLLMClientを実装する
-    - `server/infrastructure/llm/llm_client.py` にBedrockLLMClientを作成
+    - `server/app/infrastructure/llm/llm_client.py` にBedrockLLMClientを作成
     - `AWS_BEDROCK_MODEL_ID` 設定時に Amazon Bedrock Runtime を利用
     - 未設定時は依存性注入で StubLLMClient にフォールバック
     - _Requirements: 2.1, 2.2_
   - [x] 2.5 DefaultMeaningExtractionServiceを実装する
-    - `server/infrastructure/llm/meaning_extraction_service.py` を作成
+    - `server/app/infrastructure/llm/meaning_extraction_service.py` を作成
     - 各IntermediateDataに対してLLMClientを呼び出し、結果を集約
     - エラー発生時は抽出済みルールを保持し、ログ出力して処理継続
     - _Requirements: 1.1, 1.2, 1.3, 1.4_
@@ -64,7 +64,7 @@
 
 - [x] 4. アプリケーション層の実装
   - [x] 4.1 ExtractBusinessRulesUseCaseを実装する
-    - `server/application/analysis/extract_business_rules.py` を作成
+    - `server/app/application/analysis/extract_business_rules.py` を作成
     - ジョブ存在確認、MeaningExtractionService呼び出し、BusinessRule変換・保存
     - _Requirements: 1.1, 1.3, 1.5_
   - [ ]* 4.2 抽出→保存→取得ラウンドトリップのプロパティテストを実装する
@@ -72,7 +72,7 @@
     - モックリポジトリを使用し、抽出されたルールの数と内容が保存・取得後に一致することを検証
     - **Validates: Requirements 1.1, 1.3, 1.5**
   - [x] 4.3 GetBusinessRulesUseCaseを実装する
-    - `server/application/analysis/get_business_rules.py` を作成
+    - `server/app/application/analysis/get_business_rules.py` を作成
     - ジョブ存在確認、業務ルール一覧取得（rule_typeフィルタ対応、created_at昇順）
     - _Requirements: 3.1, 3.2, 3.3, 3.4_
   - [ ]* 4.4 業務ルール一覧取得のプロパティテストを実装する
@@ -83,15 +83,15 @@
 
 - [x] 5. API層の実装
   - [x] 5.1 Pydanticスキーマを実装する
-    - `server/api/schemas/business_rule.py` を作成
+    - `server/app/api/schemas/business_rule.py` を作成
     - SourceLocationSchema、BusinessRuleResponse、BusinessRuleListResponseを定義
     - _Requirements: 5.1, 5.2_
   - [x] 5.2 業務ルールルーターを実装する
-    - `server/api/routes/analysis.py` に GET /api/v1/jobs/{job_id}/business-rules を追加
+    - `server/app/api/routes/analysis.py` に GET /api/v1/jobs/{job_id}/business-rules を追加
     - rule_typeクエリパラメータ対応
     - _Requirements: 3.1, 3.2, 3.3, 3.4_
   - [x] 5.3 依存性注入を追加する
-    - `server/api/dependencies.py` にget_business_rule_repository、get_meaning_extraction_service、get_llm_clientを追加
+    - `server/app/api/dependencies.py` にget_business_rule_repository、get_meaning_extraction_service、get_llm_clientを追加
     - _Requirements: 2.1_
   - [x] 5.4 ルーターをmain.pyに登録する（既存ルーターへの追加の場合は不要）
     - _Requirements: 3.1_

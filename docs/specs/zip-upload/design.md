@@ -61,7 +61,7 @@ graph TD
 
 #### 1. Domain層
 
-**SourceFile エンティティ** (`server/domain/models/source_file.py`)
+**SourceFile エンティティ** (`server/app/domain/models/source_file.py`)
 
 ```python
 @dataclass
@@ -75,7 +75,7 @@ class SourceFile:
     created_at: datetime
 ```
 
-**SourceFileRepository インターフェース** (`server/domain/repositories/source_file_repository.py`)
+**SourceFileRepository インターフェース** (`server/app/domain/repositories/source_file_repository.py`)
 
 ```python
 class SourceFileRepository(ABC):
@@ -86,7 +86,7 @@ class SourceFileRepository(ABC):
 
 #### 2. Application層
 
-**ZIP_Extractor** (`server/application/sources/zip_extractor.py`)
+**ZIP_Extractor** (`server/app/application/sources/zip_extractor.py`)
 
 ZIPファイルの展開・フィルタリング・言語判定を担当するピュアロジックモジュール。
 
@@ -121,7 +121,7 @@ def extract_zip(zip_data: bytes) -> list[ExtractedFile]:
     """ZIPバイナリを展開し、フィルタリング済みファイルリストを返す。"""
 ```
 
-**UploadSourceUseCase** (`server/application/sources/upload_source.py`)
+**UploadSourceUseCase** (`server/app/application/sources/upload_source.py`)
 
 ```python
 class UploadSourceUseCase:
@@ -158,7 +158,7 @@ class UploadedFileInfo:
 
 #### 3. Infrastructure層
 
-**SQLAlchemy テーブルモデル** (`server/infrastructure/database/models.py` に追加)
+**SQLAlchemy テーブルモデル** (`server/app/infrastructure/database/models.py` に追加)
 
 ```python
 class SourceFileModel(Base):
@@ -172,11 +172,11 @@ class SourceFileModel(Base):
     created_at = Column(DateTime, nullable=False, server_default=func.now())
 ```
 
-**SQLAlchemySourceFileRepository** (`server/infrastructure/database/repositories/source_file_repository.py`)
+**SQLAlchemySourceFileRepository** (`server/app/infrastructure/database/repositories/source_file_repository.py`)
 - SourceFileRepositoryインターフェースの実装
 - create_manyはbulk insertで実装
 
-**S3Client** (`server/infrastructure/storage/s3_client.py`)
+**S3Client** (`server/app/infrastructure/storage/s3_client.py`)
 
 ```python
 class S3Client:
@@ -191,13 +191,13 @@ class S3Client:
 
 #### 4. API層
 
-**アップロードルーター** (`server/api/routes/upload.py`)
+**アップロードルーター** (`server/app/api/routes/upload.py`)
 
 | エンドポイント | メソッド | 説明 |
 |---------------|---------|------|
 | `/api/v1/projects/{project_id}/upload` | POST | ZIPファイルアップロード（multipart/form-data） |
 
-**Pydanticスキーマ** (`server/api/schemas/upload.py`)
+**Pydanticスキーマ** (`server/app/api/schemas/upload.py`)
 
 ```python
 class UploadedFileResponse(BaseModel):
@@ -369,7 +369,7 @@ CREATE INDEX idx_source_files_project_id ON source_files(project_id);
 | S3アップロード失敗 | 500 | INTERNAL_ERROR | エラーログ出力、汎用エラーメッセージを返却 |
 | DB登録失敗 | 500 | INTERNAL_ERROR | エラーログ出力、汎用エラーメッセージを返却 |
 
-**例外クラス**（既存の `server/domain/exceptions.py` に追加）
+**例外クラス**（既存の `server/app/domain/exceptions.py` に追加）
 
 ```python
 class InvalidZipFileError(Exception):
@@ -379,7 +379,7 @@ class EmptyZipFileError(Exception):
     pass
 ```
 
-**例外ハンドラ**（既存の `server/api/error_handlers.py` に追加）
+**例外ハンドラ**（既存の `server/app/api/error_handlers.py` に追加）
 - InvalidZipFileError → 422レスポンス
 - EmptyZipFileError → 422レスポンス
 

@@ -43,7 +43,7 @@ graph TD
 
 #### 1. Domain層
 
-**Project エンティティ** (`server/domain/models/project.py`)
+**Project エンティティ** (`server/app/domain/models/project.py`)
 
 ```python
 @dataclass
@@ -56,7 +56,7 @@ class Project:
     updated_at: datetime
 ```
 
-**ProjectRepository インターフェース** (`server/domain/repositories/project_repository.py`)
+**ProjectRepository インターフェース** (`server/app/domain/repositories/project_repository.py`)
 
 ```python
 class ProjectRepository(ABC):
@@ -68,29 +68,29 @@ class ProjectRepository(ABC):
 
 #### 2. Application層
 
-**CreateProjectUseCase** (`server/application/projects/create_project.py`)
+**CreateProjectUseCase** (`server/app/application/projects/create_project.py`)
 - 入力: name, description(任意)
 - 処理: UUID生成、s3_prefix生成（`projects/{uuid}`）、タイムスタンプ設定、リポジトリ経由で保存
 - 出力: 作成されたProjectエンティティ
 
-**ListProjectsUseCase** (`server/application/projects/list_projects.py`)
+**ListProjectsUseCase** (`server/app/application/projects/list_projects.py`)
 - 入力: page, per_page
 - 処理: リポジトリ経由でページネーション付き一覧取得
 - 出力: (プロジェクトリスト, 総件数)
 
-**GetProjectUseCase** (`server/application/projects/get_project.py`)
+**GetProjectUseCase** (`server/app/application/projects/get_project.py`)
 - 入力: project_id
 - 処理: リポジトリ経由で取得、存在しない場合は例外
 - 出力: Projectエンティティ
 
-**DeleteProjectUseCase** (`server/application/projects/delete_project.py`)
+**DeleteProjectUseCase** (`server/app/application/projects/delete_project.py`)
 - 入力: project_id
 - 処理: リポジトリ経由で削除、存在しない場合は例外
 - 出力: なし
 
 #### 3. Infrastructure層
 
-**SQLAlchemy テーブルモデル** (`server/infrastructure/database/models.py`)
+**SQLAlchemy テーブルモデル** (`server/app/infrastructure/database/models.py`)
 
 ```python
 class ProjectModel(Base):
@@ -103,18 +103,18 @@ class ProjectModel(Base):
     updated_at = Column(DateTime, nullable=False, server_default=func.now(), onupdate=func.now())
 ```
 
-**SQLAlchemyProjectRepository** (`server/infrastructure/database/repositories/project_repository.py`)
+**SQLAlchemyProjectRepository** (`server/app/infrastructure/database/repositories/project_repository.py`)
 - ProjectRepositoryインターフェースの実装
 - asyncpg経由の非同期DB操作
 - find_allはcreated_at降順でソート
 
-**DB接続** (`server/infrastructure/database/connection.py`)
+**DB接続** (`server/app/infrastructure/database/connection.py`)
 - AsyncSessionの生成
 - SQLAlchemy async engine設定
 
 #### 4. API層
 
-**プロジェクトルーター** (`server/api/routes/projects.py`)
+**プロジェクトルーター** (`server/app/api/routes/projects.py`)
 
 | エンドポイント | メソッド | 説明 |
 |---------------|---------|------|
@@ -123,7 +123,7 @@ class ProjectModel(Base):
 | `/api/v1/projects/{project_id}` | GET | プロジェクト詳細 |
 | `/api/v1/projects/{project_id}` | DELETE | プロジェクト削除 |
 
-**Pydanticスキーマ** (`server/api/schemas/project.py`)
+**Pydanticスキーマ** (`server/app/api/schemas/project.py`)
 
 ```python
 class ProjectCreateRequest(BaseModel):
@@ -148,7 +148,7 @@ class PaginationResponse(BaseModel):
     per_page: int
 ```
 
-**依存性注入** (`server/api/dependencies.py`)
+**依存性注入** (`server/app/api/dependencies.py`)
 - get_session: AsyncSessionの提供
 - get_project_repository: ProjectRepositoryの提供
 
@@ -290,14 +290,14 @@ CREATE TABLE projects (
 | プロジェクト未検出 | 404 | NOT_FOUND | "Project not found" メッセージを返却 |
 | DB接続エラー | 500 | INTERNAL_ERROR | エラーログ出力、汎用エラーメッセージを返却 |
 
-**例外クラス** (`server/domain/exceptions.py`)
+**例外クラス** (`server/app/domain/exceptions.py`)
 
 ```python
 class ProjectNotFoundError(Exception):
     pass
 ```
 
-**例外ハンドラ** (`server/api/error_handlers.py`)
+**例外ハンドラ** (`server/app/api/error_handlers.py`)
 - ProjectNotFoundError → 404レスポンス
 - ValidationError → 422レスポンス
 - 未処理例外 → 500レスポンス

@@ -50,6 +50,20 @@ React Queryがサーバー状態のキャッシュ・同期を担当するため
 api → application → domain ← infrastructure
 ```
 
+実装上のパッケージルートは `server/app/` とする。`server/` 直下は実行基盤・設定ファイル・Alembic を置くためのディレクトリであり、アプリケーションコードは置かない。
+
+```
+server/
+├── app/
+│   ├── main.py
+│   ├── api/
+│   ├── application/
+│   ├── config/
+│   ├── domain/
+│   └── infrastructure/
+└── alembic/
+```
+
 | レイヤー | 役割 | 依存先 |
 |----------|------|--------|
 | api | FastAPIルーター。リクエスト受付・レスポンス返却 | application |
@@ -64,6 +78,8 @@ api → application → domain ← infrastructure
 - domain層は外部ライブラリに依存しない。純粋なPythonで書く
 - infrastructure層はdomain層で定義されたリポジトリインターフェースを実装する
 - 依存性注入でinfrastructure → domain の接続を行う（FastAPIのDepends）
+- FastAPI の起動エントリポイントは `server/app/main.py` とし、起動時は `cd server && uv run uvicorn app.main:app --reload --port 8000` を使用する
+- `config` は `app` 配下のアプリケーション設定パッケージとして扱い、環境変数ロードや設定解決をここに集約する
 
 ### 非同期処理の原則
 

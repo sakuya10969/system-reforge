@@ -65,7 +65,7 @@ graph TD
 
 #### 1. Domain層
 
-**DependencyType 列挙型** (`server/domain/models/dependency_edge.py`)
+**DependencyType 列挙型** (`server/app/domain/models/dependency_edge.py`)
 
 ```python
 from enum import Enum
@@ -76,7 +76,7 @@ class DependencyType(str, Enum):
     INCLUDE = "INCLUDE"
 ```
 
-**DependencyEdge エンティティ** (`server/domain/models/dependency_edge.py`)
+**DependencyEdge エンティティ** (`server/app/domain/models/dependency_edge.py`)
 
 ```python
 from dataclasses import dataclass
@@ -92,7 +92,7 @@ class DependencyEdge:
     metadata: dict | None
 ```
 
-**DependencyEdgeRepository インターフェース** (`server/domain/repositories/dependency_edge_repository.py`)
+**DependencyEdgeRepository インターフェース** (`server/app/domain/repositories/dependency_edge_repository.py`)
 
 ```python
 from abc import ABC, abstractmethod
@@ -110,7 +110,7 @@ class DependencyEdgeRepository(ABC):
 
 #### 2. Application層
 
-**GetDependencyGraphUseCase** (`server/application/analysis/get_dependency_graph.py`)
+**GetDependencyGraphUseCase** (`server/app/application/analysis/get_dependency_graph.py`)
 
 ```python
 class GetDependencyGraphUseCase:
@@ -130,7 +130,7 @@ class GetDependencyGraphUseCase:
         """
 ```
 
-**DependencyGraphResult** (`server/application/analysis/get_dependency_graph.py`)
+**DependencyGraphResult** (`server/app/application/analysis/get_dependency_graph.py`)
 
 ```python
 @dataclass
@@ -153,7 +153,7 @@ class DependencyGraphResult:
     edges: list[GraphEdge]
 ```
 
-**GetFlowDataUseCase** (`server/application/analysis/get_flow_data.py`)
+**GetFlowDataUseCase** (`server/app/application/analysis/get_flow_data.py`)
 
 ```python
 class GetFlowDataUseCase:
@@ -173,7 +173,7 @@ class GetFlowDataUseCase:
         """
 ```
 
-**FlowDataResult** (`server/application/analysis/get_flow_data.py`)
+**FlowDataResult** (`server/app/application/analysis/get_flow_data.py`)
 
 ```python
 @dataclass
@@ -188,7 +188,7 @@ class FlowDataResult:
     roots: list[FlowNode]
 ```
 
-**GetSourceFilesForJobUseCase** (`server/application/analysis/get_source_files_for_job.py`)
+**GetSourceFilesForJobUseCase** (`server/app/application/analysis/get_source_files_for_job.py`)
 
 ```python
 class GetSourceFilesForJobUseCase:
@@ -207,7 +207,7 @@ class GetSourceFilesForJobUseCase:
 
 #### 3. Infrastructure層
 
-**SQLAlchemy テーブルモデル** (`server/infrastructure/database/models.py` に追加)
+**SQLAlchemy テーブルモデル** (`server/app/infrastructure/database/models.py` に追加)
 
 ```python
 class DependencyEdgeModel(Base):
@@ -220,7 +220,7 @@ class DependencyEdgeModel(Base):
     metadata = Column(JSONB, nullable=True)
 ```
 
-**SQLAlchemyDependencyEdgeRepository** (`server/infrastructure/database/repositories/dependency_edge_repository.py`)
+**SQLAlchemyDependencyEdgeRepository** (`server/app/infrastructure/database/repositories/dependency_edge_repository.py`)
 
 - DependencyEdgeRepositoryインターフェースの実装
 - find_by_jobはjob_idでフィルタ
@@ -228,7 +228,7 @@ class DependencyEdgeModel(Base):
 
 #### 4. API層
 
-**依存関係ルーター** (`server/api/routes/analysis.py` に追加)
+**依存関係ルーター** (`server/app/api/routes/analysis.py` に追加)
 
 | エンドポイント | メソッド | 説明 |
 |---------------|---------|------|
@@ -236,7 +236,7 @@ class DependencyEdgeModel(Base):
 | `/api/v1/jobs/{job_id}/dependencies` | GET | 依存関係グラフデータ取得 |
 | `/api/v1/jobs/{job_id}/flow` | GET | 処理フローデータ取得 |
 
-**Pydanticスキーマ** (`server/api/schemas/analysis.py` に追加)
+**Pydanticスキーマ** (`server/app/api/schemas/analysis.py` に追加)
 
 ```python
 class GraphNodeResponse(BaseModel):
@@ -537,7 +537,7 @@ CREATE INDEX idx_dependency_edges_job_id ON dependency_edges(job_id);
 | ジョブ未検出 | 404 | NOT_FOUND | "Analysis job not found" メッセージを返却 |
 | DB接続エラー | 500 | INTERNAL_ERROR | エラーログ出力、汎用エラーメッセージを返却 |
 
-既存の例外クラス（`server/domain/exceptions.py`）を再利用:
+既存の例外クラス（`server/app/domain/exceptions.py`）を再利用:
 - `AnalysisJobNotFoundError` → 404レスポンス（analysis-job仕様で定義済み）
 
 ### フロントエンド

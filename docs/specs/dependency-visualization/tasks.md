@@ -8,7 +8,7 @@
 
 - [x] 1. ドメイン層の実装
   - [x] 1.1 DependencyEdgeエンティティとDependencyType列挙型を実装する
-    - `server/domain/models/dependency_edge.py` を作成
+    - `server/app/domain/models/dependency_edge.py` を作成
     - DependencyType列挙型（CALL, COPY, INCLUDE）を定義
     - DependencyEdgeデータクラスを定義（id, job_id, source_file_id, target_file_id, dependency_type, metadata）
     - _Requirements: 4.1, 4.2_
@@ -17,20 +17,20 @@
     - Hypothesisで任意のDependencyEdgeを生成し、dependency_typeが有効な値のみであることを検証
     - **Validates: Requirements 4.1, 4.2**
   - [x] 1.3 DependencyEdgeRepositoryインターフェースを実装する
-    - `server/domain/repositories/dependency_edge_repository.py` を作成
+    - `server/app/domain/repositories/dependency_edge_repository.py` を作成
     - find_by_job、create_manyメソッドを定義
     - _Requirements: 1.1_
 
 - [x] 2. インフラストラクチャ層の実装
   - [x] 2.1 DependencyEdgeModelを追加する
-    - `server/infrastructure/database/models.py` にDependencyEdgeModelを追加
+    - `server/app/infrastructure/database/models.py` にDependencyEdgeModelを追加
     - job_idにインデックスを設定
     - _Requirements: 1.1, 4.1_
   - [x] 2.2 Alembicマイグレーションを作成する
     - dependency_edgesテーブルの作成マイグレーションを生成
     - _Requirements: 1.1_
   - [x] 2.3 SQLAlchemyDependencyEdgeRepositoryを実装する
-    - `server/infrastructure/database/repositories/dependency_edge_repository.py` を作成
+    - `server/app/infrastructure/database/repositories/dependency_edge_repository.py` を作成
     - DependencyEdgeModel ↔ DependencyEdge のマッピング
     - find_by_jobはjob_idでフィルタ
     - _Requirements: 1.1_
@@ -40,7 +40,7 @@
 
 - [x] 4. アプリケーション層の実装
   - [x] 4.1 GetDependencyGraphUseCaseを実装する
-    - `server/application/analysis/get_dependency_graph.py` を作成
+    - `server/app/application/analysis/get_dependency_graph.py` を作成
     - GraphNode、GraphEdge、DependencyGraphResultデータクラスを定義
     - ジョブ存在確認、依存関係データ取得、ソースファイル取得、ノード・エッジ形式への変換
     - _Requirements: 1.1, 1.2, 1.4, 1.5_
@@ -49,7 +49,7 @@
     - 任意のソースファイル群とDependencyEdge群を生成し、変換結果のnodes/edgesが入力データと一致することを検証
     - **Validates: Requirements 1.1, 1.4, 1.5**
   - [x] 4.3 GetFlowDataUseCaseを実装する
-    - `server/application/analysis/get_flow_data.py` を作成
+    - `server/app/application/analysis/get_flow_data.py` を作成
     - FlowNode、FlowDataResultデータクラスを定義
     - 依存関係データからツリー構造への変換ロジック（ルートノード特定、再帰的ツリー構築）
     - _Requirements: 2.1, 2.4_
@@ -58,28 +58,28 @@
     - 任意の依存関係エッジ集合を生成し、ツリー構造のルートノードが他から呼ばれていないことを検証
     - **Validates: Requirements 2.1, 2.4**
   - [x] 4.5 GetSourceFilesForJobUseCaseを実装する
-    - `server/application/analysis/get_source_files_for_job.py` を作成
+    - `server/app/application/analysis/get_source_files_for_job.py` を作成
     - ジョブ存在確認、project_idからソースファイル一覧取得
     - _Requirements: 3.1, 3.2_
 
 - [x] 5. API層の実装
   - [x] 5.1 Pydanticスキーマを実装する
-    - `server/api/schemas/analysis.py` に追加（または新規作成）
+    - `server/app/api/schemas/analysis.py` に追加（または新規作成）
     - GraphNodeResponse、GraphEdgeResponse、DependencyGraphResponse、DependencyGraphDataを定義
     - FlowNodeResponse、FlowDataResponse、FlowDataDataを定義
     - SourceFileResponse、SourceFileListResponseを定義
     - _Requirements: 5.1, 5.2, 5.3_
   - [x] 5.2 依存関係ルーターを実装する
-    - `server/api/routes/analysis.py` に追加（または新規作成）
+    - `server/app/api/routes/analysis.py` に追加（または新規作成）
     - GET /api/v1/jobs/{job_id}/source-files（ソースファイル一覧）
     - GET /api/v1/jobs/{job_id}/dependencies（依存関係グラフ）
     - GET /api/v1/jobs/{job_id}/flow（処理フロー）
     - _Requirements: 1.1, 2.1, 3.1_
   - [x] 5.3 依存性注入を追加する
-    - `server/api/dependencies.py` にget_dependency_edge_repositoryを追加
+    - `server/app/api/dependencies.py` にget_dependency_edge_repositoryを追加
     - _Requirements: 1.1_
   - [x] 5.4 ルーターをmain.pyに登録する
-    - `server/main.py` に依存関係ルーターを追加（未登録の場合）
+    - `server/app/main.py` に依存関係ルーターを追加（未登録の場合）
     - _Requirements: 1.1_
   - [ ]* 5.5 API統合テストを実装する
     - **Property 2: 存在しないjob_idへのNOT_FOUND**

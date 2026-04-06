@@ -8,7 +8,7 @@
 
 - [x] 1. ドメイン層の実装
   - [x] 1.1 AnalysisJobエンティティとJobStatus列挙型を実装する
-    - `server/domain/models/analysis_job.py` を作成
+    - `server/app/domain/models/analysis_job.py` を作成
     - JobStatus列挙型（pending, running, completed, failed）を定義
     - VALID_TRANSITIONS辞書を定義
     - AnalysisJobデータクラスにtransition_toメソッドを実装（不正遷移時にInvalidStatusTransitionErrorを発生）
@@ -19,32 +19,32 @@
     - running遷移時のstarted_at、completed遷移時のcompleted_at、failed遷移時のerror_message設定を検証
     - **Validates: Requirements 4.1, 4.2, 4.3, 5.1, 5.2**
   - [x] 1.3 例外クラスを追加する
-    - `server/domain/exceptions.py` にAnalysisJobNotFoundError、InvalidStatusTransitionError、NoSourceFilesErrorを追加
+    - `server/app/domain/exceptions.py` にAnalysisJobNotFoundError、InvalidStatusTransitionError、NoSourceFilesErrorを追加
     - _Requirements: 1.3, 1.4, 3.2, 5.2_
   - [x] 1.4 AnalysisJobRepositoryインターフェースを実装する
-    - `server/domain/repositories/analysis_job_repository.py` を作成
+    - `server/app/domain/repositories/analysis_job_repository.py` を作成
     - create, find_by_id, find_by_project, updateメソッドを定義
     - _Requirements: 1.1, 2.1, 3.1_
   - [x] 1.5 AnalysisServiceインターフェースを実装する
-    - `server/domain/services/analysis_service.py` を作成
+    - `server/app/domain/services/analysis_service.py` を作成
     - analyzeメソッドを定義（抽象クラス）
     - _Requirements: 4.4_
 
 - [x] 2. インフラストラクチャ層の実装
   - [x] 2.1 AnalysisJobModelを追加する
-    - `server/infrastructure/database/models.py` にAnalysisJobModelを追加
+    - `server/app/infrastructure/database/models.py` にAnalysisJobModelを追加
     - project_idとstatusにインデックスを設定
     - _Requirements: 1.1_
   - [x] 2.2 Alembicマイグレーションを作成する
     - analysis_jobsテーブルの作成マイグレーションを生成
     - _Requirements: 1.1_
   - [x] 2.3 SQLAlchemyAnalysisJobRepositoryを実装する
-    - `server/infrastructure/database/repositories/analysis_job_repository.py` を作成
+    - `server/app/infrastructure/database/repositories/analysis_job_repository.py` を作成
     - AnalysisJobModel ↔ AnalysisJob のマッピング
     - find_by_projectはcreated_at降順でソート
     - _Requirements: 1.1, 2.1, 3.1_
   - [x] 2.4 StubAnalysisServiceを実装する
-    - `server/infrastructure/analysis/stub_analysis_service.py` を作成
+    - `server/app/infrastructure/analysis/stub_analysis_service.py` を作成
     - AnalysisServiceインターフェースのスタブ実装（何もしない）
     - _Requirements: 4.4_
 
@@ -53,7 +53,7 @@
 
 - [x] 4. アプリケーション層の実装
   - [x] 4.1 StartAnalysisUseCaseを実装する
-    - `server/application/jobs/start_analysis.py` を作成
+    - `server/app/application/jobs/start_analysis.py` を作成
     - プロジェクト存在確認、ソースファイル存在確認、ジョブ作成ロジック
     - _Requirements: 1.1, 1.3, 1.4_
   - [ ]* 4.2 StartAnalysisUseCaseのプロパティテストを実装する
@@ -61,15 +61,15 @@
     - ソースファイル0件のプロジェクトに対してジョブ作成がNoSourceFilesErrorを発生させることを検証
     - **Validates: Requirements 1.4**
   - [x] 4.3 ListJobsUseCaseを実装する
-    - `server/application/jobs/list_jobs.py` を作成
+    - `server/app/application/jobs/list_jobs.py` を作成
     - プロジェクト存在確認後、ジョブ一覧をcreated_at降順で返却
     - _Requirements: 2.1, 2.2, 2.3_
   - [x] 4.4 GetJobUseCaseを実装する
-    - `server/application/jobs/get_job.py` を作成
+    - `server/app/application/jobs/get_job.py` を作成
     - ジョブ取得、存在しない場合はAnalysisJobNotFoundError
     - _Requirements: 3.1, 3.2_
   - [x] 4.5 RunAnalysisUseCaseを実装する
-    - `server/application/jobs/run_analysis.py` を作成
+    - `server/app/application/jobs/run_analysis.py` を作成
     - ステータス遷移（pending→running→completed/failed）、タイムスタンプ設定、Analysis_Service呼び出し
     - _Requirements: 4.1, 4.2, 4.3, 4.4_
   - [ ]* 4.6 RunAnalysisUseCaseのユニットテストを実装する
@@ -80,23 +80,23 @@
 
 - [x] 5. API層の実装
   - [x] 5.1 Pydanticスキーマを実装する
-    - `server/api/schemas/job.py` を作成
+    - `server/app/api/schemas/job.py` を作成
     - JobResponse、JobListResponse、JobCreateResponseを定義
     - _Requirements: 6.1, 6.2, 6.3_
   - [x] 5.2 ジョブルーターを実装する
-    - `server/api/routes/jobs.py` を作成
+    - `server/app/api/routes/jobs.py` を作成
     - POST /api/v1/projects/{project_id}/jobs（ジョブ作成 + BackgroundTasks登録）
     - GET /api/v1/projects/{project_id}/jobs（ジョブ一覧）
     - GET /api/v1/jobs/{job_id}（ジョブ詳細）
     - _Requirements: 1.1, 1.2, 2.1, 3.1_
   - [x] 5.3 例外ハンドラを追加する
-    - `server/api/error_handlers.py` にAnalysisJobNotFoundError、NoSourceFilesError、InvalidStatusTransitionErrorのハンドラを追加
+    - `server/app/api/error_handlers.py` にAnalysisJobNotFoundError、NoSourceFilesError、InvalidStatusTransitionErrorのハンドラを追加
     - _Requirements: 1.3, 1.4, 3.2, 5.2_
   - [x] 5.4 依存性注入を追加する
-    - `server/api/dependencies.py` にget_analysis_job_repository、get_analysis_serviceを追加
+    - `server/app/api/dependencies.py` にget_analysis_job_repository、get_analysis_serviceを追加
     - _Requirements: 1.1_
   - [x] 5.5 ルーターをmain.pyに登録する
-    - `server/main.py` にジョブルーターを追加
+    - `server/app/main.py` にジョブルーターを追加
     - _Requirements: 1.1_
   - [ ]* 5.6 API統合テストを実装する
     - **Property 1: ジョブ作成→取得ラウンドトリップ**

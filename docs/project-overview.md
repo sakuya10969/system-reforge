@@ -44,3 +44,26 @@ COBOLなどのレガシーシステムのソースコードを解析し、業務
 6. LLMで中間データから意味を抽出（ソースコードは直接渡さない）
 7. 結果をDB保存
 8. フロントエンドで表示・レビュー
+
+## バックエンド構成
+
+バックエンドのアプリケーションコードは `server/app/` 配下に集約する。`server/` 直下は `pyproject.toml`、`.env`、`alembic/` などの実行基盤のみを置く。
+
+```
+server/
+├── app/
+│   ├── main.py
+│   ├── api/
+│   ├── application/
+│   ├── config/
+│   ├── domain/
+│   └── infrastructure/
+└── alembic/
+```
+
+起動コマンド:
+
+```bash
+cd server
+uv run uvicorn app.main:app --reload --port 8000
+```

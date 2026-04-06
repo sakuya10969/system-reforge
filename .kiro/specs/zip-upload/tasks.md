@@ -8,20 +8,20 @@
 
 - [x] 1. バックエンドDomain層
   - [x] 1.1 SourceFileドメインモデル作成
-    - `server/domain/models/source_file.py` にSourceFileデータクラスを実装
-    - `server/domain/models/__init__.py` でエクスポート
+    - `server/app/domain/models/source_file.py` にSourceFileデータクラスを実装
+    - `server/app/domain/models/__init__.py` でエクスポート
     - _Requirements: 3.1_
   - [x] 1.2 SourceFileRepositoryインターフェース作成
-    - `server/domain/repositories/source_file_repository.py` に抽象クラスを実装
+    - `server/app/domain/repositories/source_file_repository.py` に抽象クラスを実装
     - create_many, find_by_project, find_by_id メソッドを定義
     - _Requirements: 3.1_
   - [x] 1.3 ドメイン例外クラス追加
-    - `server/domain/exceptions.py` にInvalidZipFileError、EmptyZipFileErrorを追加
+    - `server/app/domain/exceptions.py` にInvalidZipFileError、EmptyZipFileErrorを追加
     - _Requirements: 1.2, 1.4, 4.3_
 
 - [x] 2. ZIP展開・言語判定ロジック実装
   - [x] 2.1 ZIP_Extractor実装
-    - `server/application/sources/zip_extractor.py` を作成
+    - `server/app/application/sources/zip_extractor.py` を作成
     - LANGUAGE_MAP定義、detect_language関数、is_excluded_entry関数、extract_zip関数を実装
     - 隠しファイル（.始まり）、システムファイル（__MACOSX等）、ディレクトリエントリの除外
     - 破損ZIPの場合はInvalidZipFileError、空ZIPの場合はEmptyZipFileErrorを送出
@@ -35,15 +35,15 @@
 
 - [x] 3. Infrastructure層実装
   - [x] 3.1 SourceFileModelテーブル定義追加
-    - `server/infrastructure/database/models.py` にSourceFileModelを追加
+    - `server/app/infrastructure/database/models.py` にSourceFileModelを追加
     - project_idへのFK、インデックス設定
     - _Requirements: 3.1_
   - [x] 3.2 SQLAlchemySourceFileRepository実装
-    - `server/infrastructure/database/repositories/source_file_repository.py` を作成
+    - `server/app/infrastructure/database/repositories/source_file_repository.py` を作成
     - create_many（bulk insert）、find_by_project、find_by_idを実装
     - _Requirements: 3.1_
   - [x] 3.3 S3Client実装
-    - `server/infrastructure/storage/s3_client.py` を作成
+    - `server/app/infrastructure/storage/s3_client.py` を作成
     - upload_file、generate_s3_keyメソッドを実装
     - S3キーフォーマット: `{s3_prefix}/sources/{file_path}`
     - _Requirements: 2.1, 2.3_
@@ -53,7 +53,7 @@
 
 - [x] 4. Application層実装
   - [x] 4.1 UploadSourceUseCase実装
-    - `server/application/sources/upload_source.py` を作成
+    - `server/app/application/sources/upload_source.py` を作成
     - プロジェクト存在確認 → ZIP展開 → S3アップロード → DB一括登録 → 結果返却
     - UploadResult、UploadedFileInfoデータクラスを定義
     - _Requirements: 1.1, 1.3, 2.1, 2.2, 3.1_
@@ -63,20 +63,20 @@
 
 - [x] 5. API層実装
   - [x] 5.1 Pydanticスキーマ作成
-    - `server/api/schemas/upload.py` を作成
+    - `server/app/api/schemas/upload.py` を作成
     - UploadedFileResponse、UploadResultResponseを定義
     - _Requirements: 5.1, 5.2, 5.3_
   - [x] 5.2 エラーハンドラ追加
-    - `server/api/error_handlers.py` にInvalidZipFileError、EmptyZipFileErrorのハンドラを追加
+    - `server/app/api/error_handlers.py` にInvalidZipFileError、EmptyZipFileErrorのハンドラを追加
     - _Requirements: 1.2, 1.4, 4.3_
   - [x] 5.3 アップロードルーター実装
-    - `server/api/routes/upload.py` を作成
+    - `server/app/api/routes/upload.py` を作成
     - POST /api/v1/projects/{project_id}/upload（multipart/form-data）
     - Content-Typeバリデーション（application/zip, application/x-zip-compressed）
     - ユースケースを呼び出し、レスポンススキーマで返却
     - _Requirements: 1.1, 1.2, 1.3_
   - [x] 5.4 FastAPIアプリケーション設定更新
-    - `server/main.py` にアップロードルーターを登録
+    - `server/app/main.py` にアップロードルーターを登録
     - _Requirements: なし（基盤）_
   - [ ]* 5.5 レスポンス形式のプロパティテスト
     - **Property 6: レスポンス形式の統一性**
