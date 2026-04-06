@@ -55,17 +55,13 @@ docker-compose.yml
 
 ```
 server/
-├── main.py                    # FastAPIエントリポイント
-├── api/                       # プレゼンテーション層（ルーター・スキーマ）
-├── application/               # ユースケース層
-│   ├── analysis/              # 分析結果取得・業務ルール抽出
-│   ├── jobs/                  # 解析ジョブ制御
-│   ├── projects/              # プロジェクト管理
-│   ├── requirements/          # 要件レビュー・エクスポート
-│   └── sources/               # ZIP展開・ソースアップロード
-├── config/                    # 環境変数設定
-├── domain/                    # ドメイン層（モデル・リポジトリIF・サービスIF）
-├── infrastructure/            # インフラ層（DB・S3・LLM実装）
+├── app/                       # FastAPIアプリ本体
+│   ├── main.py                # FastAPIエントリポイント
+│   ├── api/                   # プレゼンテーション層（ルーター・スキーマ）
+│   ├── application/           # ユースケース層
+│   ├── config/                # 環境変数設定
+│   ├── domain/                # ドメイン層（モデル・リポジトリIF・サービスIF）
+│   └── infrastructure/        # インフラ層（DB・S3・LLM実装）
 └── alembic/                   # DBマイグレーション
 ```
 
@@ -89,7 +85,7 @@ docker-compose up -d
 cd server
 uv sync
 uv run alembic upgrade head
-uv run uvicorn server.main:app --reload --port 8000
+uv run uvicorn app.main:app --reload --port 8000
 ```
 
 `server/.env` では少なくとも `AWS_BEDROCK_MODEL_ID`、`AWS_BEDROCK_REGION`、`AWS_ACCESS_KEY_ID`、`AWS_SECRET_ACCESS_KEY`、`S3_BUCKET_NAME` を設定する。`AWS_BEDROCK_MODEL_ID` が未設定の場合、LLM はスタブ実装にフォールバックする。

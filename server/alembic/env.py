@@ -3,9 +3,9 @@ import sys
 from logging.config import fileConfig
 from pathlib import Path
 
-# server/ の親ディレクトリ（リポジトリルート）を sys.path に追加
-# これにより `from server.xxx import ...` が解決できる
-sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+# server/ ディレクトリを sys.path に追加
+# これにより `from app.xxx import ...` が解決できる
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from sqlalchemy import pool
 from sqlalchemy.engine import Connection
@@ -13,7 +13,7 @@ from sqlalchemy.ext.asyncio import async_engine_from_config
 
 from alembic import context
 
-from server.infrastructure.database.models import Base
+from app.infrastructure.database.models import Base
 
 config = context.config
 
