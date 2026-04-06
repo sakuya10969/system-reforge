@@ -1,0 +1,16 @@
+{
+  "enabled": true,
+  "name": "Mirror Spec on Update",
+  "description": ".kiro/specs/ 配下のファイルが編集されたとき、同じディレクトリ構造で docs/specs/ に同期する",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      ".kiro/specs/**/*"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "A file was just edited under .kiro/specs/. Copy it to the corresponding path under docs/specs/, preserving the directory structure. For example, .kiro/specs/feature-name/design.md should be copied to docs/specs/feature-name/design.md. Read the source file and write the exact same content to the destination path. Do not modify the content."
+  }
+}

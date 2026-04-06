@@ -1,0 +1,16 @@
+{
+  "enabled": true,
+  "name": "Mirror Spec on Create",
+  "description": ".kiro/specs/ 配下にファイルが新規作成されたとき、同じディレクトリ構造で docs/specs/ にコピーする",
+  "version": "1",
+  "when": {
+    "type": "fileCreated",
+    "patterns": [
+      ".kiro/specs/**/*"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "A file was just created under .kiro/specs/. Copy it to the corresponding path under docs/specs/, preserving the directory structure. For example, .kiro/specs/feature-name/requirements.md should be copied to docs/specs/feature-name/requirements.md. Read the source file and write the exact same content to the destination path. Do not modify the content."
+  }
+}
